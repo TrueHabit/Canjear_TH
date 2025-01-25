@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>TrueHabits - Canje de Puntos</title>
+  <style>
+    /* RESET BÁSICO */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    /* COLORES PRINCIPALES */
+    :root {
+      --verde-oscuro: #0A4A45;  
+      --verde-claro: #ebf9f7;   
+      --verde-boton: #0A4A45;   
+      --verde-boton-hover: #083c38;
+    }
+
+    /* MARCA DE AGUA “H” EN EL FONDO */
+    html, body {
+      height: 100%;
+      background-color: var(--verde-claro);
+      position: relative;
+    }
+    body::before {
+      content: "H";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 35rem;
+      color: var(--verde-oscuro);
+      opacity: 0.05;   
+      z-index: -1;    
+      pointer-events: none;
+    }
+
+    /* ENCABEZADO */
+    header {
+      background-color: var(--verde-oscuro);
+      color: #fff;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-nav {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-nav img {
+      height: 40px;
+      margin-right: 0.5rem;
+    }
+
+    .logo-nav h1 {
+      font-size: 1.5rem;
+      margin-right: 2rem;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .user-info {
+      font-weight: bold;
+    }
+
+    /* SECCIONES / CONTENEDOR */
+    .container {
+      max-width: 1200px;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+    }
+
+    section {
+      margin-bottom: 2rem;
+    }
+
+    /* Por defecto, ocultamos las secciones con ID y mostramos #inicio si no hay hash */
+    section[id] {
+      display: none;
+    }
+    section[id]:target {
+      display: block;
+    }
+    #inicio {
+      display: block; /* Se ve por defecto */
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+      color: var(--verde-oscuro);
+      text-align: center;
+      padding-top: 1rem;
+    }
+
+    .sub-section-title {
+      font-size: 1.5rem;
+      color: var(--verde-oscuro);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      border-left: 4px solid var(--verde-oscuro);
+      padding-left: 0.5rem;
+    }
+
+    /* BOTONES GRANDES DE INICIO */
+    .inicio-botones {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .inicio-botones a {
+      text-decoration: none;
+    }
+
+    .btn-inicio {
+      display: inline-block;
+      background-color: var(--verde-oscuro);
+      color: #fff;
+      padding: 1rem 2rem;
+      border-radius: 1.5rem;
+      font-size: 1.1rem;
+      text-align: center;
+      text-transform: uppercase;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+      min-width: 200px;
+      border: 2px solid #00302c;
+    }
+
+    .btn-inicio:hover {
+      background-color: var(--verde-boton-hover);
+    }
+
+    /* CARDS */
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: var(--verde-oscuro);
+    }
+
+    .card-text {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 1rem;
+    }
+
+    .btn-canjear {
+      background-color: var(--verde-boton);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.95rem;
+      transition: background-color 0.3s;
+    }
+
+    .btn-canjear:hover {
+      background-color: var(--verde-boton-hover);
+    }
+
+    .countdown {
+      color: #e00;
+      font-weight: bold;
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    /* FAQ */
+    .faq-item {
+      background-color: #fff;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    .faq-item h3 {
+      font-size: 1.1rem;
+      color: var(--verde-oscuro);
+      margin-bottom: 0.5rem;
+    }
+
+    .faq-item p {
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    /* MODAL - CARRUSEL */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      width: 90%;
+      max-width: 600px;
+      padding: 1rem;
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .modal-title {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: var(--verde-oscuro);
+    }
+
+    .modal-gallery {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .modal-gallery img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    /* Flechas internas redondeadas */
+    .arrow {
+      font-size: 1.5rem;
+      background-color: rgba(255, 255, 255, 0.7);
+      border: none;
+      cursor: pointer;
+      margin: 0 1rem;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 40px;
+    }
+    .arrow:hover {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+    #prevImg { left: 0; }
+    #nextImg { right: 0; }
+
+    .modal-description {
+      font-size: 0.95rem;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .modal-canjear {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: var(--verde-boton);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .modal-canjear:hover {
+      background-color: var(--verde-boton-hover);
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #fff;
+      border-top: 1px solid #ddd;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ENCABEZADO -->
+<header>
+  <div class="logo-nav">
+    <!-- Logo de ejemplo (puedes cambiar la URL) -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/TrueHabits_Logo.png" alt="TrueHabits Logo">
+    <h1>TrueHabits</h1>
+    <nav>
+      <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#productos">Productos</a></li>
+        <li><a href="#descuentos">Descuentos</a></li>
+        <li><a href="#sorteos">Sorteos</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="user-info">Santiago | Puntos: 1200</div>
+</header>
+
+<!-- SECCIÓN INICIO -->
+<section id="inicio" class="container">
+  <h2>¡Bienvenido a TrueHabits!</h2>
+  <p style="text-align:center; color:#444; max-width:600px; margin:0 auto;">
+    Canjea tus puntos para conseguir fantásticos productos, descuentos exclusivos<br>
+    o participar en nuestros sorteos mensuales. ¡Comienza tu camino hacia hábitos más saludables!
+  </p>
+  <!-- TRES BOTONES GRANDES DE INICIO -->
+  <div class="inicio-botones">
+    <a href="#productos" class="btn-inicio">Productos</a>
+    <a href="#descuentos" class="btn-inicio">Descuentos</a>
+    <a href="#sorteos" class="btn-inicio">Sorteos</a>
+  </div>
+</section>
+
+<!-- SECCIÓN PRODUCTOS -->
+<section id="productos" class="container">
+  <div class="sub-section-title">Productos</div>
+  <div class="cards-container">
+    <!-- EJEMPLO 1: MAT DE YOGA -->
+    <div class="card"
+         data-title="Mat de Yoga TrueHabits"
+         data-description="Experimenta la máxima comodidad y estabilidad al meditar o entrenar. <br><br>
+         - Superficie antideslizante y acolchada<br>
+         - Medidas: 183 cm x 61 cm<br>
+         - Precio original: 29,99 €<br>
+         - ¡Ideal para pilates y estiramientos!
+         "
+         data-images='[
+           "https://m.media-amazon.com/images/I/71c4Cv2ySYL._AC_SL1500_.jpg",
+           "https://m.media-amazon.com/images/I/71LGKJBpZhL._AC_SL1500_.jpg",
+           "https://m.media-amazon.com/images/I/81Bc+yiT4UL._AC_SL1500_.jpg"
+         ]'>
+      <img src="https://m.media-amazon.com/images/I/71c4Cv2ySYL._AC_SL1500_.jpg" alt="Mat de Yoga">
+      <div class="card-body">
+        <div>
+          <h3 class="card-title">Mat de Yoga</h3>
+          <p class="card-text">Comodidad y estabilidad para tu práctica diaria.</p>
+        </div>
+        <button class="btn-canjear">Canjear por 800 puntos</button>
+      </div>
+    </div>
+
+    <!-- EJEMPLO 2: ZAPATILLAS NIKE -->
+    <div class="card"
+         data-title="Zapatillas Nike RunFly"
+         data-description="Diseñadas para batir tus marcas personales. <br><br>
+         - Amortiguación reactiva que reduce el impacto<br>
+         - Parte superior transpirable y ligera<br>
+         - Precio original: 99,99 €<br>
+         - Ideales para carreras de media y larga distancia
+         "
+         data-images='[
+           "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/etqwqspmm08ezeq6fnrx/zoom-fly-4-road-running-shoes-Dg6kkt.png",
+           "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/3843c728-754a-4ef8-87be-0447ad06a551/zoom-fly-4-road-running-shoes-Dg6kkt.png",
+           "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/925b7faf-5acb-4f9e-aa1a-ff9e0d58faaa/zoom-fly-4-road-running-shoes-Dg6kkt.png"
+         ]'>
+      <img src="https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/etqwqspmm08ezeq6fnrx/zoom-fly-4-road-running-shoes-Dg6kkt.png" alt="Zapatillas Nike">
+      <div class="card-body">
+        <div>
+          <h3 class="card-title">Zapatillas Nike RunFly</h3>
+          <p class="card-text">Ligereza y reactividad para tus carreras.</p>
+        </div>
+        <button class="btn-canjear">Canjear por 1200 puntos</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN DESCUENTOS -->
+<section id="descuentos" class="container">
+  <div class="sub-section-title">Descuentos</div>
+  <div class="cards-container">
+    <!-- Descuento Gimnasio X -->
+    <div class="card"
+         data-title="Descuento Gimnasio X"
+         data-description="¡Pon tu cuerpo en movimiento! Aprovecha un 20% de descuento mensual en Gimnasio X. <br><br>
+         - Acceso ilimitado a salas de pesas y cardio<br>
+         - Clases dirigidas (Yoga, HIIT, Spinning, etc.)<br>
+         - Precio mensual original: 40 €<br>
+         - Queda en 32 €/mes con este descuento
+         "
+         data-images='[
+           "https://images.pexels.com/photos/3838383/pexels-photo-3838383.jpeg",
+           "https://images.pexels.com/photos/4754138/pexels-photo-4754138.jpeg",
+           "https://images.pexels.com/photos/3823039/pexels-photo-3823039.jpeg"
+         ]'>
+      <img src="https://images.pexels.com/photos/3838383/pexels-photo-3838383.jpeg" alt="Gimnasio X">
+      <div class="card-body">
+        <div>
+          <h3 class="card-title">Descuento Gimnasio X</h3>
+          <p class="card-text">20% en tu suscripción mensual.</p>
+        </div>
+        <button class="btn-canjear">Canjear por 200 puntos</button>
+      </div>
+    </div>
+
+    <!-- Descuento Tienda Salud Y -->
+    <div class="card"
+         data-title="Descuento Tienda Salud Y"
+         data-description="Ahorra en tus suplementos y vitaminas. 15% de descuento en toda la gama. <br><br>
+         - Proteínas, BCAAs, quemadores de grasa y más<br>
+         - Precio promedio sin descuento: 30 €<br>
+         - Pagas solo 25,5 € con esta oferta<br>
+         - Envío gratis en pedidos superiores a 50 €
+         "
+         data-images='[
+           "https://images.pexels.com/photos/7196085/pexels-photo-7196085.jpeg",
+           "https://images.pexels.com/photos/6739183/pexels-photo-6739183.jpeg",
+           "https://images.pexels.com/photos/5921781/pexels-photo-5921781.jpeg"
+         ]'>
+      <img src="https://images.pexels.com/photos/7196085/pexels-photo-7196085.jpeg" alt="Tienda Salud Y">
+      <div class="card-body">
+        <div>
+          <h3 class="card-title">Descuento Tienda Salud Y</h3>
+          <p class="card-text">15% en todos los suplementos.</p>
+        </div>
+        <button class="btn-canjear">Canjear por 150 puntos</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN SORTEOS -->
+<section id="sorteos" class="container">
+  <div class="sub-section-title">Sorteos</div>
+  <div class="cards-container">
+    <!-- Sorteo Suscripción Premium -->
+    <div class="card"
+         data-title="Sorteo Suscripción Premium"
+         data-description="3 meses de suscripción Premium a TrueHabits. <br><br>
+         - Funciones avanzadas de seguimiento<br>
+         - Retos exclusivos y estadísticas detalladas<br>
+         - Valor mensual habitual: 12,99 €<br>
+         - El ganador recibirá un código canjeable por email
+         "
+         data-images='[
+           "https://images.pexels.com/photos/6938599/pexels-photo-6938599.jpeg",
+           "https://images.pexels.com/photos/6531136/pexels-photo-6531136.jpeg",
+           "https://images.pexels.com/photos/5849599/pexels-photo-5849599.jpeg"
+         ]'
+         data-endtime="2025-12-31T23:59:59">
+      <img src="https://images.pexels.com/photos/6938599/pexels-photo-6938599.jpeg" alt="Sorteo Premium">
+      <div class="card-body">
+        <div>
+          <h3 class="card-title">Sorteo Suscripción Premium</h3>
+          <p class="card-text">3 meses ilimitados para darlo todo.</p>
+        </div>
+        <button class="btn-canjear">Canjear por 500 puntos</button>
+        <div class="countdown"></div>
+      </div>
+    </div>
+
+    <!-- Sorteo Pack Ropa Deportiva -->
+    <div class="card"
+         data-title="Sorteo Pack Ropa Deportiva"
+         data-description="Llévate un combo de ropa fitness PremiumFit (camiseta, pantalón y sudadera). <br><br>
+         - Valor total: 60 €<br>
+         - Variedad de tallas y colores<br>
+         - Envío gratis al ganador<br>
+         - Perfecto para entrenar con estilo
+         "
+         data-images='[
+           "https://images.pexels.com/photos/4498140/pexels-photo-4498140.jpeg",
+           "https://images.pexels.com/photos/3856042/pexels-photo-3856042.jpeg",
+           "https://images.pexels.com/photos/4080297/pexels-photo-4080297.jpeg"
+         ]'
+         data-endtime="2026-01-01T12:00:00">
+      <img src="https://images.pexels.com/photos/4498140/pexels-photo-4498140.jpeg" alt="Pack Ropa Deportiva">
+      <div class="card-body">
+        <div>
+          <h3 class="card-title">Sorteo Pack de Ropa Deportiva</h3>
+          <p class="card-text">Entrena con estilo y comodidad.</p>
+        </div>
+        <button class="btn-canjear">Canjear por 300 puntos</button>
+        <div class="countdown"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN FAQ -->
+<section id="faq" class="container">
+  <div class="sub-section-title">Preguntas Frecuentes (FAQ)</div>
+  <div class="faq-item">
+    <h3>¿Cómo acumulo puntos en TrueHabits?</h3>
+    <p>
+      Puedes sumar puntos completando tus retos diarios, participando en 
+      actividades especiales y manteniendo tus rachas de hábitos. ¡Cada reto 
+      cumplido te acerca a las recompensas!
+    </p>
+  </div>
+  <div class="faq-item">
+    <h3>¿Cómo canjeo mis puntos?</h3>
+    <p>
+      En la sección de Productos, Descuentos o Sorteos, haz clic en el botón 
+      “Canjear” y confirma tu solicitud. Tus puntos se descontarán automáticamente 
+      de tu saldo. Recibirás la confirmación del canje en tu correo.
+    </p>
+  </div>
+  <div class="faq-item">
+    <h3>¿Qué sucede si no gano un sorteo?</h3>
+    <p>
+      Los puntos que uses para participar no se reembolsan. Sin embargo, 
+      podrás seguir acumulando más y participar en futuros sorteos que 
+      organicemos periódicamente.
+    </p>
+  </div>
+</section>
+
+<!-- MODAL (carrusel de imágenes) -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-gallery">
+      <button class="arrow" id="prevImg">&#10094;</button>
+      <img src="" alt="Detalle" id="modalImg" />
+      <button class="arrow" id="nextImg">&#10095;</button>
+    </div>
+    <div class="modal-description" id="modalDescription"></div>
+    <button class="modal-canjear">Canjear puntos</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  © 2023 TrueHabits. Todos los derechos reservados.
+</footer>
+
+<script>
+  // Cargar por defecto la sección de Inicio si no hay hash
+  window.addEventListener("load", () => {
+    if (!location.hash) {
+      location.hash = "#inicio";
+    }
+  });
+
+  /* MODAL y CARRUSEL */
+  const modal = document.getElementById("modal");
+  const modalImg = document.getElementById("modalImg");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalDescription = document.getElementById("modalDescription");
+
+  const prevBtn = document.getElementById("prevImg");
+  const nextBtn = document.getElementById("nextImg");
+
+  let currentImages = [];
+  let currentIndex = 0;
+
+  function openModal(elem) {
+    const title = elem.getAttribute("data-title");
+    const description = elem.getAttribute("data-description");
+    const images = JSON.parse(elem.getAttribute("data-images"));
+
+    currentImages = images;
+    currentIndex = 0;
+
+    // Insertamos HTML (con br, etc.)
+    modalTitle.innerHTML = title;
+    modalDescription.innerHTML = description;
+    modalImg.src = currentImages[currentIndex];
+
+    modal.style.display = "flex";
+  }
+
+  function closeModal() {
+    modal.style.display = "none";
+  }
+
+  function showImage(index) {
+    if (index < 0) {
+      currentIndex = currentImages.length - 1;
+    } else if (index >= currentImages.length) {
+      currentIndex = 0;
+    } else {
+      currentIndex = index;
+    }
+    modalImg.src = currentImages[currentIndex];
+  }
+
+  prevBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showImage(currentIndex - 1);
+  });
+
+  nextBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showImage(currentIndex + 1);
+  });
+
+  // Al hacer clic en una tarjeta, abrimos el modal
+  const cards = document.querySelectorAll(".card");
+  cards.forEach(card => {
+    card.addEventListener("click", () => {
+      openModal(card);
+    });
+  });
+
+  // Cerrar el modal si se hace clic fuera del contenido
+  window.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+
+  /* CUENTA ATRÁS EN LOS SORTEOS */
+  const countdownCards = document.querySelectorAll('.card[data-endtime]');
+  function updateCountdown() {
+    const now = new Date().getTime();
+    countdownCards.forEach(card => {
+      const endTimeStr = card.getAttribute('data-endtime');
+      const endTime = new Date(endTimeStr).getTime();
+      const diff = endTime - now;
+      const cdElem = card.querySelector('.countdown');
+
+      if (!cdElem) return;
+
+      if (diff <= 0) {
+        cdElem.textContent = '¡Finalizado!';
+      } else {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+        cdElem.textContent = `${days}d ${hours}h ${mins}m ${secs}s restantes`;
+      }
+    });
+  }
+
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+</script>
+</body>
+</html>
